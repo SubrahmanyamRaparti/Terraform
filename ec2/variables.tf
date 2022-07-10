@@ -27,7 +27,7 @@ variable "deployment_region_name" {
 variable "ingress_ports" {
   description = "All inbound ports for a security group"
   type        = list(number)
-  default     = [22, 80, 443, 8080, 4321]
+  default     = [22, 80, 8080, 4321]
 }
 
 variable "istest" {}

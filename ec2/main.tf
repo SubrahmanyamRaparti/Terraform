@@ -16,6 +16,7 @@ provider "aws" {
 resource "aws_instance" "aws_server" {
   ami           = data.aws_ami.amazon_linux_2.id
   instance_type = var.istest == true ? var.instance_type["test"] : var.instance_type["prod"]
+  key_name      = aws_key_pair.terraform_key_pair.key_name
   # count = 1
 
   tags = local.common_tags
@@ -54,4 +55,9 @@ resource "aws_security_group" "sg" {
 resource "aws_network_interface_sg_attachment" "sg_attachment" {
   security_group_id    = aws_security_group.sg.id
   network_interface_id = aws_instance.aws_server.primary_network_interface_id
+}
+
+resource "aws_key_pair" "terraform_key_pair" {
+  key_name   = "tf_key"
+  public_key = file("/home/ubuntu/environment/sshkeys/terraform_key.pub")
 }
