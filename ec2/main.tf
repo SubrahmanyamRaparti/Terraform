@@ -1,51 +1,54 @@
 terraform {
-    required_providers {
-        aws = {
-            source  = "hashicorp/aws"
-            version = "4.21.0"
-        }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "4.21.0"
     }
+  }
 }
 
 provider "aws" {
-    region = var.region
-    access_key = var.aws_access_key
-    secret_key = var.aws_secret_key
+  region     = var.region
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
 }
 
 resource "aws_instance" "aws_server" {
-    ami = var.ami
-    instance_type = var.istest == true ? var.instance_type["test"] : var.instance_type["prod"]
-    # count = 1
-    
-    tags = local.common_tags
+  ami           = data.aws_ami.amazon_linux_2.id
+  instance_type = var.istest == true ? var.instance_type["test"] : var.instance_type["prod"]
+  # count = 1
+
+  tags = local.common_tags
 }
 
 resource "aws_eip" "aws_server_ip" {
-    vpc = true
-    # instance = aws_instance.aws_server.id
+  vpc = true
+  # instance = aws_instance.aws_server.id
 
-    tags = local.common_tags
+  tags = local.common_tags
 }
 
 resource "aws_eip_association" "aws_eip_to_server_attach" {
-    instance_id   = aws_instance.aws_server.id
-    allocation_id = aws_eip.aws_server_ip.id
+  instance_id   = aws_instance.aws_server.id
+  allocation_id = aws_eip.aws_server_ip.id
 }
 
 resource "aws_security_group" "sg" {
-    name        = "terraform_SG"
-    description = "Allow Developers to SSH"
+  name        = "terraform_SG"
+  description = "Allow Developers to SSH"
 
-    ingress {
-        description      = "Allow all traffic to SSH in aws server"
-        from_port        = 22
-        to_port          = 22
-        protocol         = "tcp"
-        cidr_blocks      = ["0.0.0.0/0"]
-        # cidr_blocks      = ["${aws_eip.aws_server_ip.public_ip}/32"]
+  dynamic "ingress" {
+    for_each = var.ingress_ports
+    iterator = port
+    content {
+      from_port   = port.value
+      to_port     = port.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+      # cidr_blocks      = ["${aws_eip.aws_server_ip.public_ip}/32"]
+    }
   }
-    tags = local.common_tags
+  tags = local.common_tags
 }
 
 resource "aws_network_interface_sg_attachment" "sg_attachment" {
