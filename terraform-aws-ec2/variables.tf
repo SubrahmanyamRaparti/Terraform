@@ -39,3 +39,9 @@ variable "name" {
   type        = string
   default     = null
 }
+
+variable "iam_instance_profile" {
+  description = "EC2 instance profile"
+  type        = string
+  default     = null
+}

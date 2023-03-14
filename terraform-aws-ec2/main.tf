@@ -5,6 +5,7 @@ resource "aws_instance" "aws_instance" {
   availability_zone      = var.availability_zone
   monitoring             = var.monitoring
   vpc_security_group_ids = var.vpc_security_group_ids
+  iam_instance_profile   = var.iam_instance_profile
 
   tags = {
     Name = var.name
