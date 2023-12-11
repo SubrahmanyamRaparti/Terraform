@@ -1,0 +1,29 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "servicediscovery:CreateService",
+                "servicediscovery:DeleteService",
+                "servicediscovery:GetService",
+                "servicediscovery:GetInstance",
+                "servicediscovery:RegisterInstance",
+                "servicediscovery:DeregisterInstance",
+                "servicediscovery:ListInstances",
+                "servicediscovery:ListNamespaces",
+                "servicediscovery:ListServices",
+                "servicediscovery:GetInstancesHealthStatus",
+                "servicediscovery:UpdateInstanceCustomHealthStatus",
+                "servicediscovery:GetOperation",
+                "route53:GetHealthCheck",
+                "route53:CreateHealthCheck",
+                "route53:UpdateHealthCheck",
+                "route53:ChangeResourceRecordSets",
+                "route53:DeleteHealthCheck",
+                "appmesh:*"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+}
